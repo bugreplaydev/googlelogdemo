@@ -1,5 +1,7 @@
+package googlelogdemo
+
 /*
-	Log entries to google.
+	Log entries to Google Cloud Logging service.
 
 // Severity: Severity of log.
 // Possible values:
@@ -13,8 +15,6 @@
 //   "ALERT"
 //   "EMERGENCY"
 */
-
-package googlelogdemo
 
 import (
 	"golang.org/x/oauth2"
@@ -66,7 +66,7 @@ func New(serviceAccount, privateKey, projectID, logsID string) *CloudLogger {
 	}
 }
 
-func (lc *CloudLogger) WriteLogEntry(severity string, e interface{}) error {
+func (cl *CloudLogger) WriteLogEntry(severity string, e interface{}) error {
 	le := &logging.LogEntry{
 		StructPayload: e,
 		Metadata: &logging.LogEntryMetadata{
@@ -78,7 +78,7 @@ func (lc *CloudLogger) WriteLogEntry(severity string, e interface{}) error {
 	req := &logging.WriteLogEntriesRequest{
 		Entries: []*logging.LogEntry{le},
 	}
-	call := lc.logEntryService.Write(lc.projectID, lc.logsID, req)
+	call := cl.logEntryService.Write(cl.projectID, cl.logsID, req)
 	_, err := call.Do()
 	if err != nil {
 		log.Println("Got an error trying to write logEntry", err)
